@@ -1,45 +1,65 @@
 import SwiftUI
 
 struct MainPage: View {
-    @State private var planePosition = CGPoint(x: 200, y: 300)
+    // Store percentages instead of absolute points
+    @State private var planeXPercent: CGFloat = 0.15
+    @State private var planeYPercent: CGFloat = 0.775
     
     var body: some View {
         VStack(spacing: 0) {
             // Map area
-            ZStack {
-                Image("airport")
-                    .resizable()
-                    .scaledToFit() // changed to keep proportions
-                    .ignoresSafeArea()
-                
-                // Airplane sprite with drag
-                Image("plane")
-                    .resizable()
-                    .frame(width: 60, height: 60)
-                    .position(planePosition)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                planePosition = value.location
+            GeometryReader { geo in
+                ZStack {
+                    // Image scales to fit
+                    Image("airport")
+                        .resizable()
+                        .scaledToFit()
+                        .overlay(
+                            GeometryReader { imgGeo in
+                                let imgSize = imgGeo.size
+                                
+                                // Compute actual position inside the image
+                                let planePosition = CGPoint(
+                                    x: imgSize.width * planeXPercent,
+                                    y: imgSize.height * planeYPercent
+                                )
+                                
+                                Image("plane")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .rotationEffect(.degrees(11))
+                                    .position(planePosition)
                             }
-                    )
+                        )
+                        .frame(width: geo.size.width, height: geo.size.height)
+                }
             }
+            .ignoresSafeArea()
             
             // Bottom ATC bar
             VStack {
-                Text("ATC: Cleared for takeoff runway 27")
-                    .font(.title3)
-                    .padding(.bottom, 5)
-                
-                Button {
-                    print("Play ATC audio")
-                } label: {
-                    Label("Play", systemImage: "speaker.wave.2.fill")
+                HStack(spacing: 10) {
+                    Button {
+                        print("Play ATC audio")
+                    } label: {
+                        Image(systemName: "speaker.wave.2.fill")
+                            .font(.title2)
+                            .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.borderless)
+                    
+                    Text("ATC: Cleared for takeoff runway 27")
+                        .font(.title3)
+                        .lineLimit(1)
+                    
+                    Image(systemName: "arrow.right")
+                        .font(.title3)
                 }
-                .buttonStyle(.borderedProminent)
+                .padding(.bottom, 5)
+                .padding(.horizontal)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 120)
+            .frame(height: 80)
             .background(.thinMaterial)
         }
     }
