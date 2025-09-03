@@ -85,14 +85,6 @@ struct MainPage: View {
             // Bottom ATC bar
             VStack {
                 HStack(spacing: 10) {
-                    Button {
-                        playCurrentAudio()
-                    } label: {
-                        Image(systemName: "speaker.wave.2.fill")
-                            .font(.title2)
-                            .padding(.vertical, 10)
-                    }
-                    .buttonStyle(.borderless)
                     
                     Text(dialogue[currentIndex].speaker + ": " + dialogue[currentIndex].text)
                         .font(.title3)
