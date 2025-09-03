@@ -87,9 +87,15 @@ struct MainPage: View {
                         .lineLimit(1)
                     
                     Button {
-                        goToNextLine()
+                        if currentIndex == dialogue.count - 1 {
+                                // Last line → quit app
+                                exit(0)
+                            } else {
+                                // Otherwise go to next line
+                                goToNextLine()
+                            }
                     } label: {
-                        Image(systemName: "arrow.right.circle.fill")
+                        Image(systemName: currentIndex == dialogue.count - 1 ? "checkmark.circle.fill" : "arrow.right.circle.fill")
                             .font(.title3)
                     }
                     .buttonStyle(.borderless)
