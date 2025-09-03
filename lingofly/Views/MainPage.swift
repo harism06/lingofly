@@ -7,6 +7,18 @@ import AVFoundation
  2) x:0.81 y:0.96 deg: 11
  3) x: 0.765 y: 0.84 deg: 11 -> 242
  4) x:0.43 y:0.1 deg: 242
+ 
+ Pilot: Los Alamitos Ground, Cessna 172, request taxi to Runway 4R.
+ ATC Ground: Cessna 172, taxi to Runway 4R, proceed via main ramp and apron, hold short of the runway.
+ Pilot: Taxi to Runway 4R via ramp and apron, hold short, C172.
+ Pilot: Los Alamitos Ground, Cessna 172 holding short Runway 4R, run-up complete, ready for departure.
+ ATC Ground: Cessna 172, Runway 4R, cleared for takeoff.
+ Pilot: Cleared for takeoff, Runway 4R, C172.
+ Pilot: Los Alamitos Tower, Cessna 172 airborne, passing 500 feet, runway 20.
+ ATC Tower: Cessna 172, radar contact, fly runway heading, climb and maintain 2,500 feet.
+ Pilot: Runway heading, climb and maintain 2,500, C172.
+ ATC Tower: Cessna 172, no other traffic, you’re clear to switch to advisory frequency when convenient.
+ Pilot: Wilco, switching to advisory, C172.
 */
 
 struct DialogueLine {
@@ -26,7 +38,7 @@ struct MainPage: View {
 
     // Example dialogue script
     private let dialogue: [DialogueLine] = [
-        DialogueLine(speaker: "Pilot", text: "Los Alamitos Ground, Cessna 172, at Hangar 5, request taxi to Runway 4R.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
+        DialogueLine(speaker: "Pilot", text: "Los Alamitos Ground, Cessna 172, request taxi to Runway 4R.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
         DialogueLine(speaker: "ATC Ground", text: "Cessna 172, taxi to Runway 4R, proceed via main ramp and apron, hold short of the runway.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
         DialogueLine(speaker: "Pilot", text: "Taxi to Runway 4R via ramp and apron, hold short, C172.", audioName: "atc1", planeTarget: CGPoint(x: 0.81, y: 0.96), planeHeading: nil),
         DialogueLine(speaker: "Pilot", text: "Los Alamitos Ground, Cessna 172 holding short Runway 4R, run-up complete, ready for departure.", audioName: "atc1", planeTarget: CGPoint(x: 0.765, y: 0.84), planeHeading: 242),
