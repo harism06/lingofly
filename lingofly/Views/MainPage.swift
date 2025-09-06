@@ -1,33 +1,42 @@
-import SwiftUI
-import AVFoundation
-
 /*
+ Pilot (You): Los Alamitos Ground, Cessna N739KD, requesting taxi clearance to Runway 4R.
+ ATC Ground: Cessna N739KD, taxi to Runway 4R, via bravo, cross Runway 4L, hold short of Runway 4R.
+ Pilot (You): Taxi to Runway 4R via bravo, cross Runway 4L, hold short of Runway 4R, Cessna 9KD.
+ ATC Ground: Cessna 9KD, contact Tower 118.4.
+ Pilot (You): Over to Tower, Cessna 9KD.
+ Pilot (You): Los Alamitos Tower, Cessna N739KD holding short Runway 4R, ready for departure.
+ ATC Tower: Cessna 9KD, winds 224 at 3, Runway 4R cleared for takeoff. Fly runway heading after departure.
+ Pilot (You): Cleared for takeoff Runway 4R, fly runway heading, Cessna 9KD.
+ ATC Tower: Cessna 9KD, climb and maintain 2,500 feet.
+ Pilot (You): Climb and maintain 2,500, Cessna 9KD.
+ ATC Tower: Cessna 9KD, monitor Unicom 122.95. Bye bye.
+ Pilot (You): Wilco, switching to Unicom at 122.95, Cessna 9KD.
+ 
  Plane Coordinates:
  1) x:0.15 y:0.775 deg: 11
  2) x:0.81 y:0.96 deg: 11
  3) x: 0.765 y: 0.84 deg: 11 -> 242
  4) x:0.43 y:0.1 deg: 242
- 
- Pilot: Los Alamitos Ground, Cessna 172, request taxi to Runway 4R.
- ATC Ground: Cessna 172, taxi to Runway 4R, proceed via main ramp and apron, hold short of the runway.
- Pilot: Taxi to Runway 4R via ramp and apron, hold short, C172.
- Pilot: Los Alamitos Ground, Cessna 172 holding short Runway 4R, run-up complete, ready for departure.
- ATC Ground: Cessna 172, Runway 4R, cleared for takeoff.
- Pilot: Cleared for takeoff, Runway 4R, C172.
- Pilot: Los Alamitos Tower, Cessna 172 airborne, passing 500 feet, runway 20.
- ATC Tower: Cessna 172, radar contact, fly runway heading, climb and maintain 2,500 feet.
- Pilot: Runway heading, climb and maintain 2,500, C172.
- ATC Tower: Cessna 172, no other traffic, you’re clear to switch to advisory frequency when convenient.
- Pilot: Wilco, switching to advisory, C172.
 */
+import SwiftUI
+import AVFoundation
+
+// MARK: - Data Models
+
+struct PlaneAction {
+    let target: CGPoint?   // where to move (x%, y%)
+    let heading: Double?   // optional rotation
+    let delay: Double      // delay before this action starts
+}
 
 struct DialogueLine {
     let speaker: String
     let text: String
     let audioName: String
-    let planeTarget: CGPoint? // x%, y% movement target (0...1)
-    let planeHeading: Double? // optional rotation for this line
+    let actions: [PlaneAction]   // sequence of plane moves/rotations
 }
+
+// MARK: - Main Page
 
 struct MainPage: View {
     @State private var planeXPercent: CGFloat = 0.15
@@ -38,17 +47,85 @@ struct MainPage: View {
 
     // Example dialogue script
     private let dialogue: [DialogueLine] = [
-        DialogueLine(speaker: "Pilot", text: "Los Alamitos Ground, Cessna 172, request taxi to Runway 4R.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "ATC Ground", text: "Cessna 172, taxi to Runway 4R, proceed via main ramp and apron, hold short of the runway.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Taxi to Runway 4R via ramp and apron, hold short, C172.", audioName: "atc1", planeTarget: CGPoint(x: 0.81, y: 0.96), planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Los Alamitos Ground, Cessna 172 holding short Runway 4R, run-up complete, ready for departure.", audioName: "atc1", planeTarget: CGPoint(x: 0.765, y: 0.84), planeHeading: 242),
-        DialogueLine(speaker: "ATC Ground", text: "Cessna 172, Runway 4R, cleared for takeoff.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Cleared for takeoff, Runway 4R, C172.", audioName: "atc1", planeTarget: CGPoint(x: 0.43, y: 0.1), planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Los Alamitos Tower, Cessna 172 airborne, passing 500 feet, runway 20.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "ATC Tower", text: "Cessna 172, radar contact, fly runway heading, climb and maintain 2,500 feet.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Runway heading, climb and maintain 2,500, C172.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "ATC Tower", text: "Cessna 172, no other traffic, you’re clear to switch to advisory frequency when convenient.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
-        DialogueLine(speaker: "Pilot", text: "Wilco, switching to advisory, C172.", audioName: "atc1", planeTarget: nil, planeHeading: nil),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Los Alamitos Ground, Cessna N739KD, requesting taxi clearance to Runway 4R.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "ATC Ground",
+            text: "Cessna N739KD, taxi to Runway 4R, via bravo, cross Runway 4L, hold short of Runway 4R.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Taxi to Runway 4R via bravo, cross Runway 4L, hold short of Runway 4R, Cessna 9KD.",
+            audioName: "atc1",
+            actions: [
+                PlaneAction(target: CGPoint(x: 0.81, y: 0.96), heading: nil, delay: 0),   // move first
+                PlaneAction(target: nil, heading: 242, delay: 0.5),                      // then rotate
+                PlaneAction(target: CGPoint(x: 0.765, y: 0.84), heading: nil, delay: 1)  // then move again
+            ]
+        ),
+        
+        DialogueLine(
+            speaker: "ATC Ground",
+            text: "Cessna 9KD, contact Tower 118.4.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Over to Tower, Cessna 9KD.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Los Alamitos Tower, Cessna N739KD holding short Runway 4R, ready for departure.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "ATC Tower",
+            text: "Cessna 9KD, winds 224 at 3, Runway 4R cleared for takeoff. Fly runway heading after departure.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Cleared for takeoff Runway 4R, fly runway heading, Cessna 9KD.",
+            audioName: "atc1",
+            actions: [
+                PlaneAction(target: CGPoint(x: 0.43, y: 0.1), heading: nil, delay: 0)
+            ]
+        ),
+        DialogueLine(
+            speaker: "ATC Tower",
+            text: "Cessna 9KD, climb and maintain 2,500 feet.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Climb and maintain 2,500, Cessna 9KD.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "ATC Tower",
+            text: "Cessna 9KD, monitor Unicom 122.95. Bye bye.",
+            audioName: "atc1",
+            actions: []
+        ),
+        DialogueLine(
+            speaker: "Pilot (You)",
+            text: "Wilco, switching to Unicom at 122.95, Cessna 9KD.",
+            audioName: "atc1",
+            actions: []
+        ),
     ]
 
     var body: some View {
@@ -92,12 +169,12 @@ struct MainPage: View {
                     
                     Button {
                         if currentIndex == dialogue.count - 1 {
-                                // Last line → quit app
-                                exit(0)
-                            } else {
-                                // Otherwise go to next line
-                                goToNextLine()
-                            }
+                            // Last line → quit app
+                            exit(0)
+                        } else {
+                            // Otherwise go to next line
+                            goToNextLine()
+                        }
                     } label: {
                         Image(systemName: currentIndex == dialogue.count - 1 ? "checkmark.circle.fill" : "arrow.right.circle.fill")
                             .font(.title3)
@@ -133,24 +210,25 @@ struct MainPage: View {
     private func goToNextLine() {
         if currentIndex + 1 < dialogue.count {
             currentIndex += 1
-            
             playCurrentAudio()
             
-            // Rotate first if a new heading is specified
-            if let heading = dialogue[currentIndex].planeHeading {
-                planeRotation = heading
-            }
-            
-            // Move plane after a small delay so rotation happens first
-            if let target = dialogue[currentIndex].planeTarget {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    planeXPercent = target.x
-                    planeYPercent = target.y
+            let actions = dialogue[currentIndex].actions
+            for (i, action) in actions.enumerated() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + action.delay + Double(i)) {
+                    if let heading = action.heading {
+                        planeRotation = heading
+                    }
+                    if let target = action.target {
+                        planeXPercent = target.x
+                        planeYPercent = target.y
+                    }
                 }
             }
         }
     }
 }
+
+// MARK: - Preview
 
 struct MainPage_Previews: PreviewProvider {
     static var previews: some View {
