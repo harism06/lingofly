@@ -35,13 +35,13 @@ struct MainPage: View {
         ),
         DialogueLine(
             speaker: "ATC Ground",
-            text: "Cessna N739KD, taxi to Runway 4R, via bravo, cross Runway 4L, hold short of Runway 4R.",
+            text: "Cessna N739KD, taxi to Runway 4R, via Bravo, cross Runway 4L, hold short of Runway 4R.",
             audioName: "atc1",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
-            text: "Taxi to Runway 4R via bravo, cross Runway 4L, hold short of Runway 4R, Cessna 9KD.",
+            text: "Taxi to Runway 4R via Bravo, cross Runway 4L, hold short of Runway 4R, Cessna 9KD.",
             audioName: "atc1",
             actions: [
                 PlaneAction(target: CGPoint(x: 0.81, y: 0.96), heading: nil, delay: 0),   // move first
