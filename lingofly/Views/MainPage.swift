@@ -30,19 +30,19 @@ struct MainPage: View {
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Los Alamitos Ground, Cessna N739KD, requesting taxi clearance to Runway 4R.",
-            audioName: "atc1",
+            audioName: "Pilot1",
             actions: []
         ),
         DialogueLine(
             speaker: "ATC Ground",
             text: "Cessna N739KD, taxi to Runway 4R, via Bravo, cross Runway 4L, hold short of Runway 4R.",
-            audioName: "atc1",
+            audioName: "ATC1",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Taxi to Runway 4R via Bravo, cross Runway 4L, hold short of Runway 4R, Cessna 9KD.",
-            audioName: "atc1",
+            audioName: "Pilot2",
             actions: [
                 PlaneAction(target: CGPoint(x: 0.81, y: 0.96), heading: nil, delay: 0),   // move first
                 PlaneAction(target: nil, heading: 242, delay: 0.5),                      // then rotate
@@ -53,31 +53,31 @@ struct MainPage: View {
         DialogueLine(
             speaker: "ATC Ground",
             text: "Cessna 9KD, contact Tower 118.4.",
-            audioName: "atc1",
+            audioName: "ATC2",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Over to Tower, Cessna 9KD.",
-            audioName: "atc1",
+            audioName: "Pilot3",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Los Alamitos Tower, Cessna N739KD holding short Runway 4R, ready for departure.",
-            audioName: "atc1",
+            audioName: "Pilot4",
             actions: []
         ),
         DialogueLine(
             speaker: "ATC Tower",
             text: "Cessna 9KD, winds 224 at 3, Runway 4R cleared for takeoff. Fly runway heading after departure.",
-            audioName: "atc1",
+            audioName: "ATC3",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Cleared for takeoff Runway 4R, fly runway heading, Cessna 9KD.",
-            audioName: "atc1",
+            audioName: "Pilot5",
             actions: [
                 PlaneAction(target: CGPoint(x: 0.43, y: 0.1), heading: nil, delay: 0)
             ]
@@ -85,25 +85,25 @@ struct MainPage: View {
         DialogueLine(
             speaker: "ATC Tower",
             text: "Cessna 9KD, climb and maintain 2,500 feet.",
-            audioName: "atc1",
+            audioName: "ATC4",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Climb and maintain 2,500, Cessna 9KD.",
-            audioName: "atc1",
+            audioName: "Pilot6",
             actions: []
         ),
         DialogueLine(
             speaker: "ATC Tower",
             text: "Cessna 9KD, monitor Unicom 122.95. Bye bye.",
-            audioName: "atc1",
+            audioName: "ATC5",
             actions: []
         ),
         DialogueLine(
             speaker: "Pilot (You)",
             text: "Wilco, switching to Unicom at 122.95, Cessna 9KD.",
-            audioName: "atc1",
+            audioName: "Pilot7",
             actions: []
         ),
     ]
@@ -186,7 +186,7 @@ struct MainPage: View {
     
     private func playCurrentAudio() {
         let audioName = dialogue[currentIndex].audioName
-        if let url = Bundle.main.url(forResource: audioName, withExtension: "mp3") {
+        if let url = Bundle.main.url(forResource: audioName, withExtension: "wav") {
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayer?.play()

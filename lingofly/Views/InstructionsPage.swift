@@ -19,16 +19,10 @@
  4) x:0.43 y:0.1 deg: 242
  
  
-1: Los Alamitos Ground, Cessna November Seven Three Niner Kilo Delta, requesting taxi clearance to Runway Four Right.
-2: Cessna November Seven Three Niner Kilo Delta, taxi to Runway Four Right, via Bravo, cross Runway Four Left, hold short of Runway Four Right.
-3: Taxi to Runway Four Right via Bravo, cross Runway Four Left, hold short of Runway Four Right, Cessna Niner Kilo Delta.
-4: Cessna Niner Kilo Delta, contact Tower One One Eight Point Four.
-5: Over to Tower, Cessna Niner Kilo Delta.
-6: Los Alamitos Tower, Cessna November Seven Three Niner Kilo Delta holding short Runway Four Right, ready for departure.
-7: Cessna Niner Kilo Delta, winds Two Two Four at Three, Runway Four Right cleared for takeoff. Fly runway heading after departure.
-8: Cleared for takeoff Runway Four Right, fly runway heading, Cessna Niner Kilo Delta.
-9: Cessna Niner Kilo Delta, climb and maintain Two Thousand Five Hundred feet.
-10: Climb and maintain Two Thousand Five Hundred, Cessna Niner Kilo Delta.
-11: Cessna Niner Kilo Delta, monitor Unicom One Two Two Point Niner Five. Bye bye.
-12: Wilco, switching to Unicom at One Two Two Point Niner Five, Cessna Niner Kilo Delta.
+
+1: Cessna November Seven Three Niner Kilo Delta, taxi to Runway Four Right, via Bravo, cross Runway Four Left, hold short of Runway Four Right.
+2: Cessna Niner Kilo Delta, contact Tower One One Eight Point Four.
+3: Cessna Niner Kilo Delta, winds Two Two Four at Three, Runway Four Right cleared for takeoff. Fly runway heading after departure.
+4: Cessna Niner Kilo Delta, climb and maintain Two Thousand Five Hundred feet.
+5: Cessna Niner Kilo Delta, monitor Unicom One Two Two Point Niner Five. Bye bye.
 */
