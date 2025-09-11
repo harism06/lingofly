@@ -186,7 +186,7 @@ struct MainPage: View {
         .onAppear {
             playCurrentAudio()
         }
-        .onChange(of: currentIndex) { _ in
+        .onChange(of: currentIndex) {
             // Hide button when switching to a new line
             showNextButton = false
         }
