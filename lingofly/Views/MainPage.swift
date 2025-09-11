@@ -24,6 +24,8 @@ struct MainPage: View {
     @State private var planeRotation: Double = 11 // starting rotation
     @State private var currentIndex: Int = 0
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var showNextButton: Bool = false // Track if next button should be visible
+    @State private var audioDelegate = AudioPlayerDelegate() // Custom delegate to handle audio completion
 
     // Example dialogue script
     private let dialogue: [DialogueLine] = [
@@ -156,6 +158,7 @@ struct MainPage: View {
                         .font(.title3)
                         .lineLimit(1)
                     
+                    // Always show the button but make it invisible/disabled when audio is playing
                     Button {
                         if currentIndex == dialogue.count - 1 {
                             // Last line → quit app
@@ -169,6 +172,9 @@ struct MainPage: View {
                             .font(.title3)
                     }
                     .buttonStyle(.borderless)
+                    .opacity(showNextButton ? 1.0 : 0.0)
+                    .disabled(!showNextButton)
+                    .animation(.easeInOut(duration: 0.3), value: showNextButton)
                 }
                 .padding(.bottom, 5)
                 .padding(.horizontal)
@@ -180,6 +186,10 @@ struct MainPage: View {
         .onAppear {
             playCurrentAudio()
         }
+        .onChange(of: currentIndex) { _ in
+            // Hide button when switching to a new line
+            showNextButton = false
+        }
     }
     
     // MARK: Helpers
@@ -189,9 +199,29 @@ struct MainPage: View {
         if let url = Bundle.main.url(forResource: audioName, withExtension: "wav") {
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayer?.delegate = audioDelegate
+                
+                // Set up the completion handler
+                audioDelegate.onAudioFinished = {
+                    DispatchQueue.main.async {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            showNextButton = true
+                        }
+                    }
+                }
+                
                 audioPlayer?.play()
             } catch {
                 print("Error playing \(audioName): \(error)")
+                // If there's an error, show the button anyway
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showNextButton = true
+                }
+            }
+        } else {
+            // If audio file doesn't exist, show the button anyway
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showNextButton = true
             }
         }
     }
@@ -214,6 +244,16 @@ struct MainPage: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Audio Player Delegate
+
+class AudioPlayerDelegate: NSObject, AVAudioPlayerDelegate {
+    var onAudioFinished: (() -> Void)?
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        onAudioFinished?()
     }
 }
 
